@@ -1,65 +1,56 @@
-const dfs = (dict, keys, l, start, return_set, arr) => {
-    if (arr.length === l) {
-        arr.sort((a, b) => a-b);
-        return_set.add(arr.join(''))
-        return;
-    } else {
-        for (let i = start; i<l; i++) {
-            for(let j = 0; j<dict[keys[i]].length; j++){
-                //console.log("현재:", dict[keys[i]][j]);
-                if (!arr.includes(dict[keys[i]][j])) {
-                    arr.push(dict[keys[i]][j]);
-                    //console.log(arr);
-                    dfs(dict, keys, l, start+1, return_set, arr);
-                    arr.pop();
-                }
-            }
-        }
-    }
+const dfs = (user_id, banned_id, visited, arr, s, start) => {
+  if (arr.length === banned_id.length) {
+    //console.log("arr:", arr);
+    let a = arr.slice();
+    a.sort();
+    const string = a.join("");
+    s.add(string);
+    //console.log(s);
+    return s;
+  }
+  for (let i = start; i < banned_id.length; i++) {
+    const l = banned_id[i].length;
 
-    return return_set
-}
+    for (let j = 0; j < user_id.length; j++) {
+      //console.log(i, banned_id[i], user_id[j]);
+      result = true;
+      if (user_id[j].length === l && visited[j] === 0) {
+        for (let k = 0; k < user_id[j].length; k++) {
+          if (banned_id[i][k] === user_id[j][k] || banned_id[i][k] === "*") {
+            continue;
+          } else {
+            result = false;
+          }
+        }
+        if (result) {
+          //console.log(i, user_id[j]);
+          arr.push(user_id[j]);
+          visited[j] = 1;
+          //console.log(arr);
+          dfs(user_id, banned_id, visited, arr, s, start + 1);
+          arr.pop();
+          visited[j] = 0;
+          // console.log("뺀 후 ", arr);
+        }
+      }
+    }
+    break;
+  }
+  return s;
+};
 
 function solution(user_id, banned_id) {
-    let answer = 0;
+  let visited = new Array(user_id.length).fill(0);
+  let arr = new Array();
+  let s = new Set();
 
-    let dict = {}
+  dfs(user_id, banned_id, visited, arr, s, 0);
 
-    for (let i = 0; i<banned_id.length; i++) {
-        dict[banned_id[i]] = []
-    }
+  //console.log("s:", s);
 
-    for (let i = 0; i<banned_id.length; i++) {
-        for (let j = 0; j<user_id.length; j++) {
-            result = true;
-            if (user_id[j].length !== banned_id[i].length) {
-                continue
-            } else {
-                for (let k = 0; k<user_id[j].length; k++) {
-                    if (user_id[j][k] === banned_id[i][k] || banned_id[i][k] === "*") {
-                        continue
-                    }
-                    else {
-                        result = false;
-                        break;
-                    }
-                }
-                if (result) {
-                    dict[banned_id[i]].push(user_id[j]);
-                }
-            }
-        }
-    }
-
-    console.log(dict);
-
-    
-
-    const a = dfs(dict, Object.keys(dict), Object.keys(dict).length, 0, new Set(), new Array());
-    answer = a.size;
-    return answer;
+  return s.size;
 }
 
-const user_id = ["frodo", "fradi", "crodo", "abc123", "frodoc"]
-const banned_id = ["*rodo", "*rodo", "******"]
+const user_id = ["frodo", "fradi", "crodo", "abc123", "frodoc"];
+const banned_id = ["fr*d*", "*rodo", "******", "******"];
 console.log(solution(user_id, banned_id));
