@@ -1,6 +1,8 @@
 import sys
 read = sys.stdin.readline
 
+# 반복되는 문자열 중 가장 긴 문자열의 길이 찾기
+
 
 def make_table(p):
     l = len(p)
