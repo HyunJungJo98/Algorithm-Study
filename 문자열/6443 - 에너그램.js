@@ -7,29 +7,32 @@ const input = fs
 // const input = fs.readFileSync('/dev/stdin').toString().trim().split('\n');
 
 const n = +input[0];
-const strings = input.slice(1);
-const dict = {};
+let dict = {};
+const s = [];
 
-const backTracking = (string, dict, s, l) => {
+const backTracking = (l, string) => {
   if (s.length === l) {
     console.log(s.join(''));
     return;
   }
 
-  for (key of string) {
+  for (let i = 0; i < string.length; i++) {
+    const key = string[i];
     if (dict[key] !== 0) {
       dict[key] -= 1;
       s.push(key);
-      backTracking(string, dict, s, l);
+      backTracking(l, string);
       s.pop();
       dict[key] += 1;
     }
   }
 };
 
-strings.forEach((string) => {
+for (let i = 1; i < input.length; i++) {
+  const string = input[i];
   const arrString = Array.from(string).sort();
-  const dict = {};
+
+  dict = {};
 
   arrString.forEach((s) => {
     if (dict[s]) {
@@ -39,7 +42,5 @@ strings.forEach((string) => {
     }
   });
 
-  console.log(dict);
-
-  backTracking(Object.keys(dict), dict, [], arrString.length);
-});
+  backTracking(arrString.length, Object.keys(dict));
+}
