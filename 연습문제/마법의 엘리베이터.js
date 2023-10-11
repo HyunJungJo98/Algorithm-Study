@@ -1,31 +1,29 @@
 function solution(storey) {
   let answer = 0;
-  let expo = storey.toString().length - 1;
-  let n = storey;
+  const sArr = storey.toString().split('').map(Number).reverse();
+  let index = 0;
 
-  if (n > 5 && n < 10) {
-    return 10 - n + 1;
-  }
-
-  while (n !== 0) {
-    n = Math.abs(n);
-    let button = 10 ** expo;
-    let num = 0;
-
-    const quo = Math.floor(n / button);
-    const rem = n % button;
-    if (rem > button / 2) {
-      num = quo + 1;
+  while (index !== sArr.length) {
+    if (sArr[index] < 5) {
+      answer += sArr[index];
+    } else if (sArr[index] > 5) {
+      answer += 10 - sArr[index];
+      if (index === sArr.length - 1) {
+        sArr.push(1);
+      } else {
+        sArr[index + 1]++;
+      }
     } else {
-      num = quo;
+      answer += 5;
+      if (index !== sArr.length - 1 && sArr[index + 1] >= 5) {
+        sArr[index + 1]++;
+      }
     }
 
-    n -= num * button;
-    expo--;
-    answer += num;
-    console.log(n);
+    index++;
   }
+
   return answer;
 }
 
-console.log(solution(646));
+console.log(solution(9));
