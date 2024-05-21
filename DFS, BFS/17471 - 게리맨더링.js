@@ -1,6 +1,6 @@
 const fs = require('fs');
 const input = fs
-  .readFileSync('./17471input.txt')
+  .readFileSync('./DFS, BFS/17471input.txt')
   .toString()
   .trim()
   .split('\r\n');
